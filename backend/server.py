@@ -636,6 +636,9 @@ class BotStats(BaseModel):
     popular_domains: List[Dict[str, Any]]
     recent_queries: List[Dict[str, Any]]
 
+# Panel Password
+PANEL_PASSWORD = os.environ.get('PANEL_PASSWORD', 'Amin@9579')
+
 # API Routes
 @api_router.get("/")
 async def root():
@@ -644,6 +647,15 @@ async def root():
 @api_router.get("/health")
 async def health_check():
     return {"status": "healthy", "bot_running": telegram_app is not None}
+
+class LoginRequest(BaseModel):
+    password: str
+
+@api_router.post("/auth/login")
+async def login(request: LoginRequest):
+    if request.password == PANEL_PASSWORD:
+        return {"success": True}
+    raise HTTPException(status_code=401, detail="Invalid password")
 
 @api_router.get("/stats", response_model=BotStats)
 async def get_stats():
