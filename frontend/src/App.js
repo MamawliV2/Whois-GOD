@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
-import "@/App.css";
+import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { Globe, Search, Users, Activity, Clock, TrendingUp, RefreshCw, ChevronRight, Terminal, Bot, Zap } from "lucide-react";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8001";
 const API = `${BACKEND_URL}/api`;
 
 const Dashboard = () => {
@@ -170,10 +170,10 @@ const Dashboard = () => {
                     </span>
                   </div>
                   <div className="result-grid">
-                    {whoisResult.registrar?.registrar_name && (
+                    {whoisResult.domain_registrar?.registrar_name && (
                       <div className="result-item">
                         <span className="item-label">ثبت‌کننده</span>
-                        <span className="item-value">{whoisResult.registrar.registrar_name}</span>
+                        <span className="item-value">{whoisResult.domain_registrar.registrar_name}</span>
                       </div>
                     )}
                     {whoisResult.create_date && (
