@@ -56,16 +56,10 @@
 - توکن ربات تلگرام (از [@BotFather](https://t.me/BotFather))
 - API Key از [WhoisFreaks](https://whoisfreaks.com)
 
-### ⚡ نصب سریع
+### ⚡ نصب سریع (یک دستور)
 
 ```bash
-# کلون پروژه
-git clone https://github.com/your-username/whois-telegram-bot.git
-cd whois-telegram-bot
-
-# اجرای اسکریپت نصب
-chmod +x install.sh
-./install.sh
+git clone https://github.com/your-username/whois-telegram-bot.git && cd whois-telegram-bot && chmod +x install.sh && ./install.sh
 ```
 
 ### 🔧 نصب دستی
