@@ -191,13 +191,10 @@ A Telegram bot for domain WHOIS lookup with a beautiful web dashboard. Features:
 - Telegram Bot Token (from [@BotFather](https://t.me/BotFather))
 - API Key from [WhoisFreaks](https://whoisfreaks.com)
 
-### ⚡ Quick Install
+### ⚡ Quick Install (One Command)
 
 ```bash
-git clone https://github.com/your-username/whois-telegram-bot.git
-cd whois-telegram-bot
-chmod +x install.sh
-./install.sh
+git clone https://github.com/your-username/whois-telegram-bot.git && cd whois-telegram-bot && chmod +x install.sh && ./install.sh
 ```
 
 ### 🌐 API Endpoints
