@@ -4,8 +4,7 @@
 
 ![Whois Bot](https://img.shields.io/badge/Telegram-Bot-blue?style=for-the-badge&logo=telegram)
 ![Python](https://img.shields.io/badge/Python-3.11+-green?style=for-the-badge&logo=python)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-teal?style=for-the-badge&logo=fastapi)
-![React](https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react)
+![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)
 ![MongoDB](https://img.shields.io/badge/MongoDB-7.0-green?style=for-the-badge&logo=mongodb)
 
 **ربات تلگرام جستجوی اطلاعات دامنه (WHOIS) با داشبورد وب**
@@ -18,6 +17,12 @@
 
 ## فارسی
 
+### ⚡ نصب سریع (یک دستور)
+
+```bash
+git clone https://github.com/MamawliV2/Whois-GOD.git && cd Whois-GOD && chmod +x install.sh && ./install.sh
+```
+
 ### 📋 معرفی
 
 این پروژه یک ربات تلگرام برای جستجوی اطلاعات WHOIS دامنه‌ها است. با استفاده از این ربات می‌توانید:
@@ -26,6 +31,7 @@
 - ✅ وضعیت دامنه (آزاد یا ثبت شده) را بررسی کنید
 - ✅ تاریخ انقضای دامنه را ببینید
 - ✅ از رابط کاربری دو زبانه (فارسی/انگلیسی) استفاده کنید
+- ✅ داشبورد وب با احراز هویت
 
 ### 🚀 ویژگی‌ها
 
@@ -42,6 +48,7 @@
 💡 **نکته:** می‌توانید مستقیماً نام دامنه را بفرستید!
 
 #### داشبورد وب
+- 🔐 صفحه ورود با رمز عبور
 - 📊 نمایش آمار کل جستجوها
 - 👥 تعداد کاربران یکتا
 - 🔥 دامنه‌های محبوب
@@ -50,117 +57,120 @@
 
 ### 📦 پیش‌نیازها
 
-- Python 3.11+
-- Node.js 18+
-- MongoDB 6.0+
+- Ubuntu 20.04+ یا Debian 11+
+- دسترسی root به سرور
 - توکن ربات تلگرام (از [@BotFather](https://t.me/BotFather))
 - API Key از [WhoisFreaks](https://whoisfreaks.com)
+- دامنه (اختیاری - برای داشبورد وب)
 
-### ⚡ نصب سریع (یک دستور)
+---
 
-```bash
-git clone https://github.com/MamawliV2/Whois-GOD.git && cd whois-telegram-bot && chmod +x install.sh && ./install.sh
+## 🔧 عیب‌یابی و حل مشکلات رایج
+
+### ❌ خطای Node.js نسخه قدیمی
+```
+error @... The engine "node" is incompatible with this module
 ```
 
-### 🔧 نصب دستی
-
-#### 1. تنظیم Backend
-
+**راه‌حل:**
 ```bash
-cd backend
-
-# ایجاد محیط مجازی
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# یا
-.\venv\Scripts\activate  # Windows
-
-# نصب وابستگی‌ها
-pip install -r requirements.txt
-
-# تنظیم متغیرهای محیطی
-cp .env.example .env
-nano .env  # ویرایش فایل
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+source ~/.bashrc
+nvm install 18
+nvm use 18
 ```
 
-#### 2. تنظیم Frontend
-
-```bash
-cd frontend
-
-# نصب وابستگی‌ها
-yarn install
-
-# تنظیم متغیرهای محیطی
-cp .env.example .env
-nano .env  # ویرایش فایل
+### ❌ خطای MongoDB متصل نیست
+```
+ServerSelectionTimeoutError: localhost:27017
 ```
 
-#### 3. اجرا
+**راه‌حل:**
+```bash
+# نصب MongoDB
+curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] http://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+sudo apt-get update && sudo apt-get install -y mongodb-org
+sudo systemctl start mongod && sudo systemctl enable mongod
+```
 
+### ❌ خطای Conflict در ربات تلگرام
+```
+telegram.error.Conflict: terminated by other getUpdates request
+```
+
+**راه‌حل:** فقط یک instance از ربات باید اجرا باشد:
+```bash
+pkill -9 -f uvicorn
+cd ~/Whois-GOD/backend && nohup uvicorn server:app --host 0.0.0.0 --port 8001 > /tmp/backend.log 2>&1 &
+```
+
+### ❌ خطای emergentintegrations
+```
+No matching distribution found for emergentintegrations
+```
+
+**راه‌حل:** این پکیج در requirements.txt نباید باشد. فایل جدید استفاده کنید.
+
+### ❌ Frontend کار نمی‌کند
+```
+Connection refused on port 3000
+```
+
+**راه‌حل:**
+```bash
+npm install -g serve
+cd ~/Whois-GOD/frontend && nohup serve -s build -l 3000 > /tmp/frontend.log 2>&1 &
+```
+
+### ❌ تغییرات در پنل اعمال نمی‌شود
+
+**راه‌حل:** کش مرورگر را پاک کنید یا از حالت Incognito استفاده کنید.
+
+---
+
+## 🛠️ دستورات مدیریت
+
+### روشن کردن سرویس‌ها
 ```bash
 # Backend
-cd backend
-uvicorn server:app --host 0.0.0.0 --port 8001 --reload
+cd ~/Whois-GOD/backend && nohup uvicorn server:app --host 0.0.0.0 --port 8001 > /tmp/backend.log 2>&1 &
 
-# Frontend (در ترمینال جدید)
-cd frontend
-yarn start
+# Frontend
+cd ~/Whois-GOD/frontend && nohup serve -s build -l 3000 > /tmp/frontend.log 2>&1 &
 ```
 
-### 🔐 متغیرهای محیطی
-
-#### Backend (`backend/.env`)
-```env
-MONGO_URL=mongodb://localhost:27017
-DB_NAME=whois_bot
-TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-WHOISFREAKS_API_KEY=your_whoisfreaks_api_key
-CORS_ORIGINS=*
-```
-
-#### Frontend (`frontend/.env`)
-```env
-REACT_APP_BACKEND_URL=http://localhost:8001
-```
-
-### 🐳 اجرا با Docker
-
+### خاموش کردن سرویس‌ها
 ```bash
-docker-compose up -d
+pkill -f uvicorn
+pkill -f serve
 ```
 
-### 📁 ساختار پروژه
-
+### مشاهده لاگ‌ها
+```bash
+tail -f /tmp/backend.log
+tail -f /tmp/frontend.log
 ```
-whois-telegram-bot/
-├── backend/
-│   ├── server.py          # سرور FastAPI و ربات تلگرام
-│   ├── requirements.txt   # وابستگی‌های Python
-│   └── .env              # متغیرهای محیطی
-├── frontend/
-│   ├── src/
-│   │   ├── App.js        # کامپوننت اصلی React
-│   │   └── App.css       # استایل‌ها
-│   ├── package.json      # وابستگی‌های Node.js
-│   └── .env             # متغیرهای محیطی
-├── install.sh           # اسکریپت نصب
-├── docker-compose.yml   # تنظیمات Docker
-└── README.md           # این فایل
+
+### بررسی وضعیت
+```bash
+curl http://localhost:8001/api/health
+curl http://localhost:3000
 ```
 
 ---
 
 ## English
 
+### ⚡ Quick Install (One Command)
+
+```bash
+git clone https://github.com/MamawliV2/Whois-GOD.git && cd Whois-GOD && chmod +x install.sh && ./install.sh
+```
+
 ### 📋 Introduction
 
-A Telegram bot for domain WHOIS lookup with a beautiful web dashboard. Features:
-
-- ✅ Complete domain registration information
-- ✅ Check domain availability
-- ✅ View domain expiry dates
-- ✅ Bilingual interface (Persian/English)
+A Telegram bot for domain WHOIS lookup with a beautiful web dashboard.
 
 ### 🚀 Features
 
@@ -174,48 +184,44 @@ A Telegram bot for domain WHOIS lookup with a beautiful web dashboard. Features:
 | `/lang` | Change language |
 | `/help` | Help |
 
-💡 **Tip:** You can directly send a domain name!
-
 #### Web Dashboard
+- 🔐 Password-protected login
 - 📊 Total queries statistics
 - 👥 Unique users count
 - 🔥 Popular domains
 - 🕐 Recent queries
 - 🔍 Direct WHOIS lookup
 
-### 📦 Requirements
+---
 
-- Python 3.11+
-- Node.js 18+
-- MongoDB 6.0+
-- Telegram Bot Token (from [@BotFather](https://t.me/BotFather))
-- API Key from [WhoisFreaks](https://whoisfreaks.com)
+## 🔧 Troubleshooting
 
-### ⚡ Quick Install (One Command)
-
+### ❌ Node.js Version Error
 ```bash
-git clone https://github.com/MamawliV2/Whois-GOD.git && cd whois-telegram-bot && chmod +x install.sh && ./install.sh
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+source ~/.bashrc
+nvm install 18
 ```
 
-### 🌐 API Endpoints
+### ❌ MongoDB Connection Error
+```bash
+curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] http://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+sudo apt-get update && sudo apt-get install -y mongodb-org
+sudo systemctl start mongod && sudo systemctl enable mongod
+```
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/health` | GET | Health check |
-| `/api/stats` | GET | Bot statistics |
-| `/api/whois/{domain}` | GET | WHOIS lookup |
+### ❌ Telegram Bot Conflict
+```bash
+pkill -9 -f uvicorn
+cd ~/Whois-GOD/backend && nohup uvicorn server:app --host 0.0.0.0 --port 8001 > /tmp/backend.log 2>&1 &
+```
 
-### 📄 License
+---
 
-MIT License - See [LICENSE](LICENSE) file
+## 📄 License
 
-### 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+MIT License
 
 ---
 
