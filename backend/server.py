@@ -317,7 +317,7 @@ def format_check_response(data: Dict, domain: str, user_id: int) -> str:
     
     if data.get('domain_registered') == 'yes':
         response_parts.append(f"📌 *{msg['domain_registered']}*")
-        registrar = data.get('registrar', {})
+        registrar = data.get('domain_registrar') or data.get('registrar', {})
         if isinstance(registrar, dict):
             registrar_name = registrar.get('registrar_name') or registrar.get('name')
         else:
