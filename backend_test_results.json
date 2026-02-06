@@ -1,0 +1,68 @@
+{
+  "total_tests": 5,
+  "passed_tests": 5,
+  "failed_tests": 0,
+  "success_rate": 100.0,
+  "test_results": [
+    {
+      "test_name": "Health Endpoint",
+      "success": true,
+      "timestamp": "2026-02-06T01:45:04.177745",
+      "details": {
+        "status_code": 200,
+        "response": {
+          "status": "healthy",
+          "bot_running": true
+        },
+        "bot_running": true
+      }
+    },
+    {
+      "test_name": "Root API Endpoint",
+      "success": true,
+      "timestamp": "2026-02-06T01:45:04.220975",
+      "details": {
+        "status_code": 200,
+        "message": "Whois Bot API is running!"
+      }
+    },
+    {
+      "test_name": "Stats Endpoint",
+      "success": true,
+      "timestamp": "2026-02-06T01:45:04.264387",
+      "details": {
+        "status_code": 200,
+        "total_queries": 0,
+        "unique_users": 0,
+        "popular_domains_count": 0,
+        "recent_queries_count": 0
+      }
+    },
+    {
+      "test_name": "WHOIS Endpoint (google.com)",
+      "success": true,
+      "timestamp": "2026-02-06T01:45:05.781513",
+      "details": {
+        "status_code": 200,
+        "domain_name": "google.com",
+        "domain_registered": "yes",
+        "registrar": null,
+        "has_expiry_date": true,
+        "has_whois_server": true
+      }
+    },
+    {
+      "test_name": "WHOIS Endpoint (github.com)",
+      "success": true,
+      "timestamp": "2026-02-06T01:45:06.734590",
+      "details": {
+        "status_code": 200,
+        "domain_name": "github.com",
+        "domain_registered": "yes",
+        "registrar": null,
+        "has_expiry_date": true,
+        "has_whois_server": true
+      }
+    }
+  ]
+}
