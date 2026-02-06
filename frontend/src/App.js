@@ -2,12 +2,90 @@ import { useEffect, useState, useCallback } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
-import { Globe, Search, Users, Activity, Clock, TrendingUp, RefreshCw, ChevronRight, Terminal, Bot, Zap } from "lucide-react";
+import { Globe, Search, Users, Activity, Clock, TrendingUp, RefreshCw, ChevronRight, Terminal, Bot, Zap, Lock, Eye, EyeOff } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8001";
 const API = `${BACKEND_URL}/api`;
 
-const Dashboard = () => {
+// Login Page Component
+const LoginPage = ({ onLogin }) => {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await axios.post(`${API}/auth/login`, { password });
+      if (response.data.success) {
+        localStorage.setItem("whois_auth", "true");
+        localStorage.setItem("whois_auth_time", Date.now().toString());
+        onLogin();
+      }
+    } catch (err) {
+      setError("رمز عبور اشتباه است!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="login-page" data-testid="login-page">
+      <div className="login-container">
+        <div className="login-header">
+          <div className="login-icon">
+            <Lock size={40} />
+          </div>
+          <h1>Whois Bot Panel</h1>
+          <p>برای ورود رمز عبور را وارد کنید</p>
+        </div>
+
+        <form onSubmit={handleLogin} className="login-form">
+          <div className="input-group">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="رمز عبور"
+              data-testid="password-input"
+              autoFocus
+            />
+            <button
+              type="button"
+              className="toggle-password"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+
+          {error && <div className="login-error" data-testid="login-error">{error}</div>}
+
+          <button
+            type="submit"
+            className="login-button"
+            disabled={loading || !password}
+            data-testid="login-button"
+          >
+            {loading ? <RefreshCw className="spin" size={20} /> : <Lock size={20} />}
+            <span>{loading ? "در حال بررسی..." : "ورود به پنل"}</span>
+          </button>
+        </form>
+
+        <div className="login-footer">
+          <Globe size={16} />
+          <span>Whois Domain Lookup Bot</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Dashboard = ({ onLogout }) => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [whoisResult, setWhoisResult] = useState(null);
@@ -49,6 +127,12 @@ const Dashboard = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("whois_auth");
+    localStorage.removeItem("whois_auth_time");
+    onLogout();
+  };
+
   useEffect(() => {
     fetchStats();
     fetchHealth();
@@ -73,11 +157,15 @@ const Dashboard = () => {
               <span className="logo-subtitle">ربات جستجوی دامنه</span>
             </div>
           </div>
-          <div className="header-status">
+          <div className="header-actions">
             <div className={`status-indicator ${healthStatus?.bot_running ? 'active' : 'inactive'}`}>
               <Bot size={18} />
               <span>{healthStatus?.bot_running ? 'Bot Active' : 'Bot Offline'}</span>
             </div>
+            <button className="logout-button" onClick={handleLogout} data-testid="logout-button">
+              <Lock size={16} />
+              <span>خروج</span>
+            </button>
           </div>
         </div>
       </header>
@@ -314,11 +402,39 @@ const Dashboard = () => {
 };
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check if already logged in
+    const auth = localStorage.getItem("whois_auth");
+    const authTime = localStorage.getItem("whois_auth_time");
+    
+    if (auth === "true" && authTime) {
+      // Session expires after 24 hours
+      const elapsed = Date.now() - parseInt(authTime);
+      if (elapsed < 24 * 60 * 60 * 1000) {
+        setIsAuthenticated(true);
+      } else {
+        localStorage.removeItem("whois_auth");
+        localStorage.removeItem("whois_auth_time");
+      }
+    }
+  }, []);
+
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? (
+                <Dashboard onLogout={() => setIsAuthenticated(false)} />
+              ) : (
+                <LoginPage onLogin={() => setIsAuthenticated(true)} />
+              )
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>
