@@ -59,7 +59,7 @@
 ### ⚡ نصب سریع (یک دستور)
 
 ```bash
-git clone https://github.com/your-username/whois-telegram-bot.git && cd whois-telegram-bot && chmod +x install.sh && ./install.sh
+git clone https://github.com/MamawliV2/Whois-GOD.git && cd whois-telegram-bot && chmod +x install.sh && ./install.sh
 ```
 
 ### 🔧 نصب دستی
@@ -194,7 +194,7 @@ A Telegram bot for domain WHOIS lookup with a beautiful web dashboard. Features:
 ### ⚡ Quick Install (One Command)
 
 ```bash
-git clone https://github.com/your-username/whois-telegram-bot.git && cd whois-telegram-bot && chmod +x install.sh && ./install.sh
+git clone https://github.com/MamawliV2/Whois-GOD.git && cd whois-telegram-bot && chmod +x install.sh && ./install.sh
 ```
 
 ### 🌐 API Endpoints
